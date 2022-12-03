@@ -1,0 +1,7 @@
+Django
+djangorestframework
+psycopg2-binary
+python-dotenv
+flake8
+gunicorn
+django-heroku

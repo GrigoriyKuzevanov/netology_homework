@@ -1,0 +1,9 @@
+django
+djangorestframework
+psycopg2-binary
+pillow
+flake8
+python-dotenv
+gunicorn
+django-debug-toolbar
+django-heroku

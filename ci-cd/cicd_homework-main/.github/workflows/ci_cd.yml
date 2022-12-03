@@ -1,0 +1,64 @@
+name: Articles testing
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      POSTGRES_USER: test_user
+      POSTGRES_PASS: test_pwd
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: test_db
+      SECRET_KEY: b0e@^m&tccz11$w59qov$lhn-97!(%wfn-gray-c*x)^a$wx=2
+      ALLOWED_HOSTS: localhost,127.0.0.1
+
+    services:
+      postgres_articles:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER}}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASS}}
+          POSTGRES_DB: ${{ env.POSTGRES_DB}}
+        ports:
+          - 5432:5432
+        options:
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Проверка изменений
+        uses: actions/checkout@v2
+
+      - name: Установка Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Установка зависимостей
+        run: pip install -r requirements.txt
+
+      - name: Линтинг
+        run: flake8 articles
+        
+      # - name: Тестирование
+      #   run: |
+      #     python3 manage.py migrate
+      #     python3 manage.py makemigrations
+      #     python3 manage.py test
+      #   env:
+      #     SECRET_KEY: ${{ env.SECRET_KEY}}
+      #     DEBUG: "1"
+      #     ALLOWED_HOSTS: ${{ env.ALLOWED_HOSTS}}
+      #     DB_ENGINE: django.db.backends.postgresql
+      #     DB_NAME: ${{ env.POSTGRES_DB}}
+      #     DB_USER: ${{ env.POSTGRES_USER}}
+      #     DB_PASSWORD: ${{ env.POSTGRES_PASS}}
+      #     DB_HOST: ${{ env.POSTGRES_HOST}}
+      #     DB_PORT: ${{ env.POSTGRES_PORT}}

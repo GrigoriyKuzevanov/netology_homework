@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Список файлов рабочего каталога</h1>
+    {% for file in dir_list %}
+    <p>{{ file }}</p>
+    <p>================</p>
+    {% endfor %}
+</body>
+</html>

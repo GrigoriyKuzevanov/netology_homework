@@ -1,0 +1,59 @@
+version: '3.9'
+
+networks: 
+  test_net:
+
+
+volumes:
+  postgres_volume:
+  static_volume:
+
+services:
+
+  postgres_db:
+    image: postgres:latest
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data/
+      - ./logs:/var/log
+      - .:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_USER=user_test
+      - POSTGRES_PASSWORD=user_test_password
+      - POSTGRES_DB=netology_stocks_products
+    networks:
+      - test_net
+    ports:
+      - 5555:5432
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user_test -d netology_stocks_products"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  backend:
+      build: .
+      command: gunicorn stocks_products.wsgi --bind 0.0.0.0:8000
+      volumes:
+        - .:/usr/src/crud_test/
+        - static_volume:/src/stocks_products/static
+      expose:
+        - 8000
+      env_file:
+        - ./.env.dev
+      networks:
+        - test_net
+      depends_on:
+        - postgres_db
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 1330:80
+    networks:
+      - test_net
+    volumes:
+      - static_volume:/src/stocks_products/static
+    depends_on:
+      - backend

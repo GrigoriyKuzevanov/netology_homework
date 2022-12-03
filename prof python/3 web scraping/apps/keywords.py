@@ -1,0 +1,1 @@
+KEYWORDS = ['дизайн', 'фото', 'web', 'python']
