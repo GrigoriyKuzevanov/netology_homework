@@ -1,4 +1,4 @@
-#!/home/grigoriy/homework/flask/webinar/env/bin/python3
+#!/home/grigoriy/Projects/netology/flask/webinar/env/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
