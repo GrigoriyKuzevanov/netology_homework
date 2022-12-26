@@ -27,6 +27,6 @@ Content-Type: application/json
 
 ###
 
-DELETE {{baseUrl}}/ads/4
+DELETE {{baseUrl}}/ads/1
 
 ###
