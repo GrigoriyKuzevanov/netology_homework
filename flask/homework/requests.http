@@ -1,0 +1,32 @@
+@baseUrl = http://127.0.0.1:5000
+
+GET {{baseUrl}}/ads/1
+Content-Type: application/json
+
+###
+
+POST {{baseUrl}}/ads/
+Content-Type: application/json
+
+{
+    "header": "laptop hp",
+    "description": "laptop hp 123123, good condition",
+    "owner": "Grigoriy"
+}
+
+###
+
+PATCH {{baseUrl}}/ads/1
+Content-Type: application/json
+
+{
+    "header": "Lada",
+    "description": "Lada 21101, 2007",
+    "owner": "Nastya"
+}
+
+###
+
+DELETE {{baseUrl}}/ads/4
+
+###
