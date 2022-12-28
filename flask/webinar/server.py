@@ -96,7 +96,7 @@ class PatchUserSchema(pydantic.BaseModel):
 
 def validate(data_to_validate: dict, validation_class: Type[CreateUserSchema] | Type[PatchUserSchema]):
     try:
-         return validation_class(**data_to_validate).dict(exclude_none=True)
+        return validation_class(**data_to_validate).dict(exclude_none=True)
     except pydantic.ValidationError as err:
         raise HttpError(400, err.errors())
 
