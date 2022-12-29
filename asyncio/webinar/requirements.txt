@@ -2,4 +2,4 @@ requests
 aiohttp
 more-itertools
 sqlalchemy
-asyncpg
+asyncpgpip
