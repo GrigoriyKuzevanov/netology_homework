@@ -9,7 +9,7 @@ def get_person(person_id):
     return response
 
 def get_people():
-    people = [get_person(i) for i in range(1, get_count()) if 'name' in get_person(i)]
+    people = [get_person(i) for i in range(1, 10) if 'name' in get_person(i)]
     return people
 
 def get_by_api(url):

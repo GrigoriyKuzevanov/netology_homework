@@ -60,6 +60,7 @@ async def get_people():
             for item in results:
                 yield item
 
+
 async def insert_people(people_chunk):
     async with Session() as session:
             session.add_all([People(json=item) for item in people_chunk])
