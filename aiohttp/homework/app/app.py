@@ -68,9 +68,9 @@ class Advs(web.View):
             adv = await get_adv(adv_id, session)
             for key, value in adv_patch_data.items():
                 setattr(adv, key, value)
-                await session.add(adv)
+                session.add(adv)
                 await session.commit()
-            return web.json_response({"patch status": "success"})
+            return web.json_response({'patch status': 'success'})
 
 
     async def delete(self):
@@ -79,7 +79,7 @@ class Advs(web.View):
             adv = await get_adv(adv_id, session)
             await session.delete(adv)
             await session.commit()
-            return web.json_response({"delete status": "success"})
+            return web.json_response({'delete status': 'success'})
 
 
 async def orm_context(app):

@@ -53,3 +53,30 @@ def test_create_adv_2():
         'status': 'error',
         'description': 'adv already exists'
     }
+
+def test_patch_adv(create_adv):
+    adv_id = create_adv['id']
+    resp = requests.patch(
+        f'{API_URL}/advs/{adv_id}',
+        json={
+            'header': 'test_patch_header',
+            'owner': 'test_patch_owner'
+        }
+    )
+    assert resp.status_code == 200
+    assert resp.json() == {'patch status': 'success'}
+    resp = requests.get(f'{API_URL}/advs/{adv_id}')
+    assert resp.status_code == 200
+    adv_header = resp.json()['header']
+    adv_owner = resp.json()['owner']
+    assert adv_header == 'test_patch_header'
+    assert adv_owner == 'test_patch_owner'
+
+def test_delete_adv(create_adv):
+    adv_id = create_adv['id']
+    resp = requests.delete(f'{API_URL}/advs/{adv_id}')
+    assert resp.status_code == 200
+    assert resp.json() == {'delete status': 'success'}
+    resp = requests.get(f'{API_URL}/advs/{adv_id}')
+    assert resp.status_code == 404
+    assert resp.json() == {'Status': 'error', 'description': 'adv not found'}
