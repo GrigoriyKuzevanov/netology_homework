@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 
 from db import Session, engine
 from models import Base, AdvModel
+from validate import validate, AdvPostModel, AdvPatchModel
 
 
 app = web.Application()
@@ -38,7 +39,7 @@ class Advs(web.View):
     async def post(self):
         adv_post_data = await self.request.json()
         async with Session() as session:
-            new_adv = AdvModel(**adv_post_data)
+            new_adv = AdvModel(**validate(adv_post_data, AdvPostModel))
             session.add(new_adv)
             try:
                 await session.commit()
@@ -63,7 +64,7 @@ class Advs(web.View):
 
     async def patch(self):
         adv_id = int(self.request.match_info['adv_id'])
-        adv_patch_data = await self.request.json()
+        adv_patch_data = validate(await self.request.json(), AdvPatchModel)
         async with Session() as session:
             adv = await get_adv(adv_id, session)
             for key, value in adv_patch_data.items():
