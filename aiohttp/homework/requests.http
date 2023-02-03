@@ -1,0 +1,20 @@
+POST http://localhost:8080/advs/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "header": "ttt",
+    "description": "ddd",
+    "owner": "ooo"
+}
+
+###
+
+PATCH http://localhost:8080/advs/1 HTTP/1.1
+Content-Type: application/json
+
+{
+    "header": "ha ha ha"
+}
+
+###
+DELETE http://localhost:8080/advs/5 HTTP/1.1

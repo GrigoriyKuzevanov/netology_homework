@@ -21,7 +21,7 @@ def init_db():
 
 
 @pytest.fixture()
-def create_user():
+def create_adv():
     with Session() as session:
         new_user = UserModel(username=f"user_{time.time()}", password="1234")
         session.add(new_user)

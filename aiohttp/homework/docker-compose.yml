@@ -1,0 +1,21 @@
+version: '3.9'
+
+networks:
+  dev_network:
+
+services:
+
+  db:
+    image: postgres:14.1
+    environment:
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_USER: test_user
+      POSTGRES_DB: test_db
+    ports:
+      - "5431:5432"
+    
+    networks:
+      dev_network:
+        aliases:
+          - postgre
+    
