@@ -6,16 +6,59 @@ networks:
 services:
 
   db:
-    image: postgres:14.1
+    image: postgres:14.3-alpine3.15
+    ports:
+      - "5431:5432"
     environment:
       POSTGRES_PASSWORD: test_password
       POSTGRES_USER: test_user
       POSTGRES_DB: test_db
-    ports:
-      - "5431:5432"
     
     networks:
       dev_network:
         aliases:
           - postgre
     
+  app:
+    build:
+      context: .
+    environment:
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_HOST: ${PG_HOST}
+      PG_PORT: ${PG_PORT}
+      PG_DB: ${PG_DB}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      dev_network:
+        aliases:
+          - api
+    volumes:
+      - ./app:/app
+  
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+    environment:
+        PG_USER: ${PG_USER}
+        PG_PASSWORD: ${PG_PASSWORD}
+        PG_HOST: ${PG_HOST}
+        PG_PORT: ${PG_PORT}
+        PG_DB: ${PG_DB}
+        API_URL: ${API_URL}
+    depends_on:
+        - db
+        - app
+    working_dir: /app
+    entrypoint: pytest -v -s --disable-warnings
+      
+    networks:
+      dev_network:
+        aliases:
+          - test_client
+    volumes:
+        - ./app/:/app
