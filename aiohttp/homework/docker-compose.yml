@@ -28,6 +28,7 @@ services:
       PG_HOST: ${PG_HOST}
       PG_PORT: ${PG_PORT}
       PG_DB: ${PG_DB}
+      WAIT_HOSTS: ${PG_HOST}:${PG_PORT}
     ports:
       - "8080:8080"
     depends_on:
@@ -50,11 +51,10 @@ services:
         PG_PORT: ${PG_PORT}
         PG_DB: ${PG_DB}
         API_URL: ${API_URL}
+        WAIT_HOSTS: app:8080
     depends_on:
         - db
         - app
-    working_dir: /app
-    entrypoint: pytest -v -s --disable-warnings
       
     networks:
       dev_network:
