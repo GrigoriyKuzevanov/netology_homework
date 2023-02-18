@@ -16,6 +16,7 @@ celery_app = Celery(
 
 # celery_app = Celery('app', backend=f'db+{PG_DSN}', broker=REDIS_DSN)
 
+mongo = pymongo.MongoClient('mongodb://test_user_mongo:test_password_mongo@127.0.0.1:27017/files?authSource=admin')
 
 def get_task(task_id):
     return AsyncResult(task_id, app=celery_app)
@@ -36,5 +37,8 @@ def get_task(task_id):
 
 @celery_app.task
 def upscale_user_image(image_id):
-    res = upscale_image(image_id)
-    return res
+    fs = GridFS(mongo['files'])
+    file_to_upscale = fs.get(ObjectId(image_id))
+    b = upscale_image(file_to_upscale)
+    result_id = fs.put(b, filename='result.png')
+    return result_id

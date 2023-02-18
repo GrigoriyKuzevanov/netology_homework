@@ -1,5 +1,8 @@
+import base64
+import io
+import cv2
 import nanoid
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask.views import MethodView
 from flask_pymongo import PyMongo
 from config import MONGO_DSN
@@ -9,6 +12,7 @@ from bson import ObjectId, json_util
 from gridfs import GridFS
 from pymongo import MongoClient
 from pymongo_fix import PyMongoFixed
+from PIL import Image
 
 
 app = Flask('app')
@@ -48,12 +52,17 @@ class Upscale(MethodView):
 
 @app.route('/processed/<file_id>')
 def get_processed_file(file_id):
-    # fs = GridFS(mongo_cl['files'])
-    # file = fs.get(ObjectId(file_id))
-    # return file.filename
-    # file = mongo.db.files.find_one({'_id': ObjectId(file_id)})
-    return mongo.send_file(filename=file_id)
-    # return file_id
+    fs = GridFS(mongo_cl['files'])
+    pr_file = fs.get(ObjectId(file_id)).read()
+    # with open('res.png', 'wb') as f:
+    #     f.write(pr_file)
+    # return send_file("res.png")
+
+    buffer = io.BytesIO()
+    buffer.write(pr_file)
+    buffer.seek(0)
+    return send_file(buffer, download_name='result.png', mimetype='png')
+
 
 upscale_view = Upscale.as_view('upscale')
 

@@ -6,7 +6,7 @@ from bson import ObjectId
 from cv2 import dnn_superres
 from skimage.io import imread, imsave
 from PIL import Image
-
+mongo = pymongo.MongoClient('mongodb://test_user_mongo:test_password_mongo@127.0.0.1:27017/files?authSource=admin')
 
 class Upscaler:
 
@@ -37,15 +37,11 @@ class Upscaler:
             cls.instance = cls(scaler)
         return cls.instance
         
-    def upscale(self, input_file_id):
-        mongo = pymongo.MongoClient('mongodb://test_user_mongo:test_password_mongo@127.0.0.1:27017/files?authSource=admin')
-        fs = GridFS(mongo['files'])
-        input_file = fs.get(ObjectId(input_file_id))
-        image = imread(input_file)
+    def upscale(self, file_to_upscale):
+        image = imread(file_to_upscale)
         result = self.scaler.upsample(image)
-        im = result.tobytes()
-        result_id = fs.put(im, filename='result.png', contentType='image/png')
-        return result_id
+        b = result.tobytes()
+        return b            
 
 
 def upscale_image(image_id):
