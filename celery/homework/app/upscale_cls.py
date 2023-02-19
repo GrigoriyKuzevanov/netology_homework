@@ -40,7 +40,9 @@ class Upscaler:
     def upscale(self, file_to_upscale):
         image = imread(file_to_upscale)
         result = self.scaler.upsample(image)
-        b = result.tobytes()
+        result_rgb = cv2.cvtColor(result, cv2.COLOR_RGB2BGR)
+        success, encoding_data = cv2.imencode('.png', result_rgb)
+        b = encoding_data.tobytes()
         return b            
 
 

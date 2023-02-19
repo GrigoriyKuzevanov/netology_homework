@@ -41,5 +41,5 @@ def upscale_user_image(image_id):
     file_to_upscale = fs.get(ObjectId(image_id))
     b = upscale_image(file_to_upscale)
     result_id = fs.put(b, filename='result.png')
-    return result_id.
+    return result_id
 
