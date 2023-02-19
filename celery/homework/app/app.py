@@ -54,14 +54,14 @@ class Upscale(MethodView):
 def get_processed_file(file_id):
     fs = GridFS(mongo_cl['files'])
     pr_file = fs.get(ObjectId(file_id)).read()
-    # with open('res.png', 'wb') as f:
-    #     f.write(pr_file)
-    # return send_file("res.png")
 
+    # decimg = cv2.imdecode(pr_file, cv2.IMREAD_COLOR)
     buffer = io.BytesIO()
     buffer.write(pr_file)
+    # buffer.write(decimg)
     buffer.seek(0)
     return send_file(buffer, download_name='result.png', mimetype='png')
+
 
 
 upscale_view = Upscale.as_view('upscale')

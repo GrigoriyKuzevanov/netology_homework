@@ -16,4 +16,11 @@ def upscale(input_path: str, output_path: str, model_path: str) -> None:
     image = cv2.imread(input_path)
     result = scaler.upsample(image)
     cv2.imwrite(output_path, result)
+
+def example():
+    upscale('example/lama_300px_1.png', 'example/lama_600px.png', 'models/EDSR_x2.pb')
+
+
+if __name__ == '__main__':
+    example()
  
