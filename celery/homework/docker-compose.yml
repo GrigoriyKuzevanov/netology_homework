@@ -48,7 +48,7 @@ services:
     build:
       context: .
     environment:
-      PG_DSN: 'postgresql://test_user:test_password@127.0.0.1:5431/test_db'
+      PG_DSN: 'postgresql://test_user:test_password@db-postgre:5432/test_db'
       MONGO_DSN: 'mongodb://test_user_mongo:test_password_mongo@db-mongo:27017/files?authSource=admin'
       REDIS_DSN: 'redis://db-redis:6379/1'
     ports:
@@ -68,7 +68,7 @@ services:
       context: .
       dockerfile: Dockerfile.celery
     environment:
-      PG_DSN: 'postgresql://test_user:test_password@127.0.0.1:5431/test_db'
+      PG_DSN: 'postgresql://test_user:test_password@db-postgre:5432/test_db'
       MONGO_DSN: 'mongodb://test_user_mongo:test_password_mongo@db-mongo:27017/files?authSource=admin'
       REDIS_DSN: 'redis://db-redis:6379/1'
     container_name: celery
