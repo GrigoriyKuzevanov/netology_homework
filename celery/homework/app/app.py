@@ -1,18 +1,15 @@
-import base64
 import io
-import cv2
+import json
 import nanoid
 from flask import Flask, request, jsonify, send_file
 from flask.views import MethodView
 from flask_pymongo import PyMongo
 from config import MONGO_DSN
 from celery_app import celery_app, get_task, upscale_user_image
-from upscale_cls import upscale_image
 from bson import ObjectId, json_util
 from gridfs import GridFS
 from pymongo import MongoClient
 from pymongo_fix import PyMongoFixed
-from PIL import Image
 
 
 app = Flask('app')
@@ -36,8 +33,8 @@ celery_app.Task = ContextTask
 class Upscale(MethodView):
     def get(self, task_id):
         task = get_task(task_id)
-        # return jsonify({'status': task.status, 'result': task.result})
-        return json_util.dumps({'status': task.status, 'result': task.result})
+        # return json_util.dumps({'status': task.status, 'result': task.result})
+        return jsonify({'status': task.status, 'id_for_download': json_util.dumps(task.result)})
 
     def post(self):
         image_id = self.save_image('user_image')
@@ -53,13 +50,9 @@ class Upscale(MethodView):
 @app.route('/processed/<file_id>')
 def get_processed_file(file_id):
     fs = GridFS(mongo_cl['files'])
-    pr_file = fs.get(ObjectId(file_id)).read()
-    # with open('res.png', 'wb') as f:
-    #     f.write(pr_file)
-    # return send_file("res.png")
-
+    processed_file = fs.get(ObjectId(file_id)).read()
     buffer = io.BytesIO()
-    buffer.write(pr_file)
+    buffer.write(processed_file)
     buffer.seek(0)
     return send_file(buffer, download_name='result.png', mimetype='png')
 

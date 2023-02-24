@@ -1,11 +1,8 @@
 import cv2
 import os
 import pymongo
-from gridfs import GridFS
-from bson import ObjectId
 from cv2 import dnn_superres
-from skimage.io import imread, imsave
-from PIL import Image
+from skimage.io import imread
 mongo = pymongo.MongoClient('mongodb://test_user_mongo:test_password_mongo@127.0.0.1:27017/files?authSource=admin')
 
 class Upscaler:
@@ -48,9 +45,3 @@ class Upscaler:
 
 def upscale_image(image_id):
     return Upscaler.get_instance().upscale(image_id)
-
-# def main():
-#     file = upscale_image('example/lama_300px.png')
-#     cv2.imwrite('example/lama_600px_2.png', file)
-
-# main()
