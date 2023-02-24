@@ -7,5 +7,5 @@ url = 'http://127.0.0.1:5000/upscale/'
 #     print(resp.headers)
 #     print(resp.text)
 
-resp = requests.get(url+'63f0f9d1fa83190dee0caf49')
+resp = requests.get(url+'')
 print(resp.text)
