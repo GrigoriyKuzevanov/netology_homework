@@ -10,4 +10,6 @@ REDIS_DSN = os.getenv('REDIS_DSN')
 
 MONGO_DSN = os.getenv('MONGO_DSN')
 
-PG_DSN = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+PG_DSN = os.getenv('PG_DSN')
+
+# PG_DSN = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'

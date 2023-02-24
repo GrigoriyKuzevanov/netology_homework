@@ -19,15 +19,15 @@ services:
           - db-postgre
 
   redis:
-      image: redis:7.0.0-alpine3.15
-      ports:
-        - '6379:6379'
-      depends_on:
-        - postgre
-      networks:
-        dev_network:
-          aliases:
-            - db-redis
+    image: redis:7.0.0-alpine3.15
+    ports:
+      - '6379:6379'
+    depends_on:
+      - postgre
+    networks:
+      dev_network:
+        aliases:
+          - db-redis
 
   mongo:
     image: mongo:4.4.14
@@ -43,4 +43,39 @@ services:
       dev_network:
         aliases:
           - db-mongo
-          
+
+  app:
+    build:
+      context: .
+    environment:
+      PG_DSN: 'postgresql://test_user:test_password@127.0.0.1:5431/test_db'
+      MONGO_DSN: 'mongodb://test_user_mongo:test_password_mongo@db-mongo:27017/files?authSource=admin'
+      REDIS_DSN: 'redis://db-redis:6379/1'
+    ports:
+      - '5000:5000'
+    container_name: app
+    depends_on:
+      - mongo
+    networks:
+      dev_network:
+        aliases:
+          - flask
+    volumes:
+      - ./app:/app
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile.celery
+    environment:
+      PG_DSN: 'postgresql://test_user:test_password@127.0.0.1:5431/test_db'
+      MONGO_DSN: 'mongodb://test_user_mongo:test_password_mongo@db-mongo:27017/files?authSource=admin'
+      REDIS_DSN: 'redis://db-redis:6379/1'
+    container_name: celery
+    depends_on:
+      - mongo
+    networks:
+      dev_network:
+    volumes:
+      - ./app:/app
+             

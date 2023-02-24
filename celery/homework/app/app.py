@@ -1,12 +1,11 @@
 import io
-import json
 import nanoid
 from flask import Flask, request, jsonify, send_file
 from flask.views import MethodView
 from flask_pymongo import PyMongo
 from config import MONGO_DSN
 from celery_app import celery_app, get_task, upscale_user_image
-from bson import ObjectId, json_util
+from bson import ObjectId
 from gridfs import GridFS
 from pymongo import MongoClient
 from pymongo_fix import PyMongoFixed
@@ -14,10 +13,11 @@ from pymongo_fix import PyMongoFixed
 
 app = Flask('app')
 
-mongo = PyMongoFixed(app, uri='mongodb://test_user_mongo:test_password_mongo@127.0.0.1:27017/files?authSource=admin')
+# mongo = PyMongoFixed(app, uri='mongodb://test_user_mongo:test_password_mongo@127.0.0.1:27017/files?authSource=admin')
 # mongo = PyMongo(app, uri='mongodb://test_user_mongo:test_password_mongo@127.0.0.1:27017/files?authSource=admin')
-# mongo = PyMongo(app, uri=MONGO_DSN)
-mongo_cl = MongoClient('mongodb://test_user_mongo:test_password_mongo@127.0.0.1:27017/files?authSource=admin')
+mongo = PyMongo(app, uri=MONGO_DSN)
+# mongo_cl = MongoClient('mongodb://test_user_mongo:test_password_mongo@127.0.0.1:27017/files?authSource=admin')
+mongo_cl = MongoClient(MONGO_DSN)
 
 celery_app.conf.update(app.config)
 
@@ -33,8 +33,7 @@ celery_app.Task = ContextTask
 class Upscale(MethodView):
     def get(self, task_id):
         task = get_task(task_id)
-        # return json_util.dumps({'status': task.status, 'result': task.result})
-        return jsonify({'status': task.status, 'id_for_download': json_util.dumps(task.result)})
+        return jsonify({'status': task.status, 'id_for_download': task.result})
 
     def post(self):
         image_id = self.save_image('user_image')

@@ -1,0 +1,1 @@
+PYTHONUNBUFFERED=TRUE python app.py

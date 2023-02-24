@@ -1,9 +1,8 @@
 import cv2
 import os
-import pymongo
 from cv2 import dnn_superres
 from skimage.io import imread
-mongo = pymongo.MongoClient('mongodb://test_user_mongo:test_password_mongo@127.0.0.1:27017/files?authSource=admin')
+
 
 class Upscaler:
 
