@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.9'
 
 networks:
   dev_network:
@@ -78,4 +78,17 @@ services:
       dev_network:
     volumes:
       - ./app:/app
-             
+
+  tests:
+    build:
+      context: . 
+      dockerfile: Dockerfile.tests
+    environment:
+      API_URL: 'http://app:5000'
+    depends_on:
+      - app
+      - celery
+    networks:
+      dev_network:
+    volumes:
+      - ./app:/app
