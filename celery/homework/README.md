@@ -1,8 +1,8 @@
 ### Postgre Redis Mongo:
 `docker-compose up postgre redis mongo`
 
-### App Celery
+### App Celery:
 `docker-compose up app celery`
 
-### Tests
+### Tests:
 `docker-compose up tests`
